@@ -1,0 +1,72 @@
+
+CREATE TABLE [dbo].[Sistema] (
+    [Id]     INT        IDENTITY (1, 1) NOT NULL,z
+    [Nombre] NCHAR (40) NOT NULL,
+    [Descripcion] NCHAR (40) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+CREATE TABLE [dbo].[Bitacora] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Cambio]        NCHAR (50) NOT NULL,
+    [Fecha]         DATETIME   NULL,
+    [Solicitante]   INT        NOT NULL,
+    [Requerimiento] INT        NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Comentario_ToUsuario] FOREIGN KEY ([Solicitante]) REFERENCES [dbo].[Usuario] ([Id]),
+    CONSTRAINT [FK_Comentario_ToRequerimiento] FOREIGN KEY ([Requerimiento]) REFERENCES [dbo].[Requerimiento] ([Id])
+
+);
+
+
+
+CREATE TABLE [dbo].[Comentario] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Nombre]        NCHAR (30) NOT NULL,
+    [Fecha]         DATETIME   NULL,
+    [Solicitante]   INT        NOT NULL,
+    [Requerimiento] INT        NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Comentario_ToUsuario] FOREIGN KEY ([Solicitante]) REFERENCES [dbo].[Usuario] ([Id]),
+    CONSTRAINT [FK_Comentario_ToRequerimiento] FOREIGN KEY ([Requerimiento]) REFERENCES [dbo].[Requerimiento] ([Id])
+);
+
+
+
+CREATE TABLE [dbo].[Estado] (
+    [Id]     INT        IDENTITY (1, 1) NOT NULL,
+    [Nombre] NCHAR (40) NOT NULL,
+	[Priorizable] BIT NOT null,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+CREATE TABLE [dbo].[Usuario] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Nombre]        NCHAR (40) NOT NULL,
+    [Departamento]  NCHAR (40) NOT NULL,
+    [Administrador] INT        NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+
+
+
+CREATE TABLE [dbo].[Requerimiento] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Nombre]        NCHAR (30) NOT NULL,
+    [Fecha]         DATETIME   NULL,
+    [Solicitante]   INT        NOT NULL,
+    [Dificultad]    NCHAR (30) NULL,
+    [Plantilla]     NCHAR (30) NOT NULL,
+    [Descripcion]   NCHAR (30) NULL,
+    [FechaEnviado]  DATETIME   NULL,
+    [FechaRecibido] DATETIME   NULL,
+    [Estado]        INT        NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Requerimiento_ToUsuario] FOREIGN KEY ([Solicitante]) REFERENCES [dbo].[Usuario] ([Id]),
+    CONSTRAINT [FK_Requerimiento_ToEstado] FOREIGN KEY ([Estado]) REFERENCES [dbo].[Estado] ([Id])
+);
+
