@@ -12,14 +12,19 @@ namespace TestHNN.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Comentario
+    public partial class Sistema
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Sistema()
+        {
+            this.Requerimiento = new HashSet<Requerimiento>();
+        }
+    
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public Nullable<System.DateTime> Fecha { get; set; }
-        public int Solicitante { get; set; }
-        public int Requerimiento { get; set; }
+        public string Descripcion { get; set; }
     
-        public virtual Usuario Usuario { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Requerimiento> Requerimiento { get; set; }
     }
 }

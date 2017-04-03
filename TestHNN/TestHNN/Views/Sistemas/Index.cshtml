@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TestHNN.Models.Comentario>
+﻿@model IEnumerable<TestHNN.Models.Sistema>
 
 @{
     ViewBag.Title = "Index";
@@ -15,13 +15,7 @@
             @Html.DisplayNameFor(model => model.Nombre)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Requerimiento)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+            @Html.DisplayNameFor(model => model.Descripcion)
         </th>
         <th></th>
     </tr>
@@ -32,13 +26,7 @@
             @Html.DisplayFor(modelItem => item.Nombre)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Fecha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Requerimiento)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Usuario.Nombre)
+            @Html.DisplayFor(modelItem => item.Descripcion)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

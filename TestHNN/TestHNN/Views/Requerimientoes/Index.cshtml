@@ -6,78 +6,113 @@
 
 <h2>Index</h2>
 
-<div class="table-responsive">
-    <table class="table">
-        <tr class="success">
-        
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Dificultad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Plantilla)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaEnviado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaRecibido)
-            </th>
-            <th>
-                @Html.DisplayName("Estado")
-            </th>
-            <th>
-                @Html.DisplayName("Solicitante")
-            </th>
-            <th></th>
-        </tr>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dificultad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Importancia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Urgencia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Jerarquia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Prioridad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Modulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Plantilla)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaEnviado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaRecibido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado1.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Sistema1.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+        </th>
+        <th></th>
+    </tr>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Fecha)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Dificultad)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Plantilla)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaEnviado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaRecibido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado1.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Usuario.Nombre)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                    <!--@Html.ActionLink("Eliminar", "Delete", new { id=item.Id })-->
-                    @Html.ActionLink("Comentarios", "ShowById", "Comentarios", new { id = item.Id }, new {id = item.Id})
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Dificultad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Importancia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Urgencia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Jerarquia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Prioridad)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Modulo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Plantilla)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaEnviado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaRecibido)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado1.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sistema1.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Usuario.Nombre)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
+            <!--@Html.ActionLink("Eliminar", "Delete", new { id=item.Id })-->
+            @Html.ActionLink("Comentarios", "ShowById", "Comentarios", new { id = item.Id }, new { id = item.Id })
+        </td>
+    </tr>
+}
 
-    </table>
-    </div>
+</table>

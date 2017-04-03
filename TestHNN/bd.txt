@@ -70,3 +70,27 @@ CREATE TABLE [dbo].[Requerimiento] (
     CONSTRAINT [FK_Requerimiento_ToEstado] FOREIGN KEY ([Estado]) REFERENCES [dbo].[Estado] ([Id])
 );
 
+
+
+
+
+
+/// Ultimo recopilado ////
+CREATE TABLE [dbo].[Requerimiento] (
+    [Id]            INT        IDENTITY (1, 1) NOT NULL,
+    [Nombre]        NCHAR (30) NOT NULL,
+    [Fecha]         DATETIME   NULL,
+    [Solicitante]   INT        NOT NULL,
+    [Dificultad]    NCHAR (30) NULL,
+    [Plantilla]     NCHAR (30) NOT NULL,
+    [Descripcion]   NCHAR (70) NULL,
+    [FechaEnviado]  DATETIME   NULL,
+    [FechaRecibido] DATETIME   NULL,
+    [Estado]        INT        NULL,
+    [Estado]        INT        NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_Requerimiento_ToUsuario] FOREIGN KEY ([Solicitante]) REFERENCES [dbo].[Usuario] ([Id]),
+    CONSTRAINT [FK_Requerimiento_ToEstado] FOREIGN KEY ([Estado]) REFERENCES [dbo].[Estado] ([Id])
+);
+
+

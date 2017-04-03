@@ -17,7 +17,7 @@ namespace TestHNN.Controllers
         // GET: Requerimientoes
         public ActionResult Index()
         {
-            var requerimiento = db.Requerimiento.Include(r => r.Estado1).Include(r => r.Usuario);
+            var requerimiento = db.Requerimiento.Include(r => r.Estado1).Include(r => r.Sistema1).Include(r => r.Usuario);
             return View(requerimiento.ToList());
         }
 
@@ -40,6 +40,7 @@ namespace TestHNN.Controllers
         public ActionResult Create()
         {
             ViewBag.Estado = new SelectList(db.Estado, "Id", "Nombre");
+            ViewBag.Sistema = new SelectList(db.Sistema, "Id", "Nombre");
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre");
             return View();
         }
@@ -49,16 +50,22 @@ namespace TestHNN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Nombre,Fecha,Solicitante,Dificultad,Plantilla,Descripcion,FechaEnviado,FechaRecibido,Estado")] Requerimiento requerimiento)
+        public ActionResult Create([Bind(Include = "Id,Nombre,Fecha,Solicitante,Dificultad,Importancia,Urgencia,Jerarquia,Prioridad,Modulo,Plantilla,Descripcion,FechaEnviado,FechaRecibido,Estado,Sistema")] Requerimiento requerimiento)
         {
             if (ModelState.IsValid)
-            {
+            {/*
+                requerimiento.Urgencia = requerimiento.Urgencia.ToString();
+                requerimiento.Importancia = requerimiento.Importancia.ToString();
+                requerimiento.Prioridad = requerimiento.Prioridad.ToString();
+                requerimiento.Dificultad = requerimiento.Dificultad.ToString();
+                requerimiento.Jerarquia = requerimiento.Jerarquia.ToString();*/
                 db.Requerimiento.Add(requerimiento);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
             ViewBag.Estado = new SelectList(db.Estado, "Id", "Nombre", requerimiento.Estado);
+            ViewBag.Sistema = new SelectList(db.Sistema, "Id", "Nombre", requerimiento.Sistema);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", requerimiento.Solicitante);
             return View(requerimiento);
         }
@@ -76,6 +83,7 @@ namespace TestHNN.Controllers
                 return HttpNotFound();
             }
             ViewBag.Estado = new SelectList(db.Estado, "Id", "Nombre", requerimiento.Estado);
+            ViewBag.Sistema = new SelectList(db.Sistema, "Id", "Nombre", requerimiento.Sistema);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", requerimiento.Solicitante);
             return View(requerimiento);
         }
@@ -85,7 +93,7 @@ namespace TestHNN.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,Fecha,Solicitante,Dificultad,Plantilla,Descripcion,FechaEnviado,FechaRecibido,Estado")] Requerimiento requerimiento)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Fecha,Solicitante,Dificultad,Importancia,Urgencia,Jerarquia,Prioridad,Modulo,Plantilla,Descripcion,FechaEnviado,FechaRecibido,Estado,Sistema")] Requerimiento requerimiento)
         {
             if (ModelState.IsValid)
             {
@@ -94,6 +102,7 @@ namespace TestHNN.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.Estado = new SelectList(db.Estado, "Id", "Nombre", requerimiento.Estado);
+            ViewBag.Sistema = new SelectList(db.Sistema, "Id", "Nombre", requerimiento.Sistema);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", requerimiento.Solicitante);
             return View(requerimiento);
         }

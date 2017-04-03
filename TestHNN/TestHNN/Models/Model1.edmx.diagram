@@ -5,20 +5,23 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="918754794dc243e19d61a5420e48d71f" Name="Diagram1">
-        <EntityTypeShape EntityType="masterModel.Estado" Width="1.5" PointX="0.75" PointY="1.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.Requerimiento" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.Usuario" Width="1.5" PointX="0.75" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.MSreplication_options" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.spt_fallback_db" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.spt_fallback_dev" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.spt_fallback_usg" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="masterModel.spt_monitor" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
-        <AssociationConnector Association="masterModel.FK_Requerimiento_ToEstado" ManuallyRouted="false" />
-        <AssociationConnector Association="masterModel.FK_Requerimiento_ToUsuario" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="masterModel.Comentario" Width="1.5" PointX="5.25" PointY="8.25" />
-        <AssociationConnector Association="masterModel.FK_Comentario_ToRequerimiento" />
+        <EntityTypeShape EntityType="masterModel.Bitacora" Width="1.5" PointX="5" PointY="8.125" />
+        <EntityTypeShape EntityType="masterModel.Comentario" Width="1.5" PointX="5.875" PointY="13.75" />
+        <EntityTypeShape EntityType="masterModel.Estado" Width="1.5" PointX="5.75" PointY="5.625" />
+        <EntityTypeShape EntityType="masterModel.Requerimiento" Width="1.5" PointX="8" PointY="8.375" />
+        <EntityTypeShape EntityType="masterModel.Sistema" Width="1.5" PointX="5" PointY="11.25" />
+        <EntityTypeShape EntityType="masterModel.Usuario" Width="1.5" PointX="2.75" PointY="9.5" />
+        <AssociationConnector Association="masterModel.FK_Bitacora_ToUsuario" />
         <AssociationConnector Association="masterModel.FK_Comentario_ToUsuario" />
-      </Diagram>
+        <AssociationConnector Association="masterModel.FK_Requerimiento_ToEstado" />
+        <AssociationConnector Association="masterModel.FK_Requerimiento_ToSistema" />
+        <AssociationConnector Association="masterModel.FK_Requerimiento_ToUsuario" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

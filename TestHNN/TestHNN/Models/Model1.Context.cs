@@ -25,14 +25,16 @@ namespace TestHNN.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Estado> Estado { get; set; }
-        public virtual DbSet<Requerimiento> Requerimiento { get; set; }
-        public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<MSreplication_options> MSreplication_options { get; set; }
         public virtual DbSet<spt_fallback_db> spt_fallback_db { get; set; }
         public virtual DbSet<spt_fallback_dev> spt_fallback_dev { get; set; }
         public virtual DbSet<spt_fallback_usg> spt_fallback_usg { get; set; }
         public virtual DbSet<spt_monitor> spt_monitor { get; set; }
+        public virtual DbSet<Bitacora> Bitacora { get; set; }
         public virtual DbSet<Comentario> Comentario { get; set; }
+        public virtual DbSet<Estado> Estado { get; set; }
+        public virtual DbSet<Requerimiento> Requerimiento { get; set; }
+        public virtual DbSet<Sistema> Sistema { get; set; }
+        public virtual DbSet<Usuario> Usuario { get; set; }
     }
 }

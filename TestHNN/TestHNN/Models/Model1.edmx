@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="masterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Bitacora">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Cambio" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Solicitante" Type="int" Nullable="false" />
+          <Property Name="Requerimiento" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Comentario">
           <Key>
             <PropertyRef Name="Id" />
@@ -49,12 +59,26 @@ warning 6002: The table/view 'master.dbo.MSreplication_options' does not have a 
           <Property Name="Nombre" Type="nchar" MaxLength="30" Nullable="false" />
           <Property Name="Fecha" Type="datetime" />
           <Property Name="Solicitante" Type="int" Nullable="false" />
-          <Property Name="Dificultad" Type="nchar" MaxLength="30" />
+          <Property Name="Dificultad" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Importancia" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Urgencia" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Jerarquia" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Prioridad" Type="nchar" MaxLength="30" Nullable="false" />
+          <Property Name="Modulo" Type="nchar" MaxLength="30" Nullable="false" />
           <Property Name="Plantilla" Type="nchar" MaxLength="30" Nullable="false" />
           <Property Name="Descripcion" Type="nchar" MaxLength="70" />
           <Property Name="FechaEnviado" Type="datetime" />
           <Property Name="FechaRecibido" Type="datetime" />
           <Property Name="Estado" Type="int" />
+          <Property Name="Sistema" Type="int" />
+        </EntityType>
+        <EntityType Name="Sistema">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nchar" MaxLength="40" Nullable="false" />
+          <Property Name="Descripcion" Type="nchar" MaxLength="40" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'master.dbo.spt_fallback_db' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -161,15 +185,15 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
           <Property Name="Departamento" Type="nchar" MaxLength="40" Nullable="false" />
           <Property Name="Administrador" Type="int" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Comentario_ToRequerimiento">
-          <End Role="Requerimiento" Type="Self.Requerimiento" Multiplicity="1" />
-          <End Role="Comentario" Type="Self.Comentario" Multiplicity="*" />
+        <Association Name="FK_Bitacora_ToUsuario">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Bitacora" Type="Self.Bitacora" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Requerimiento">
+            <Principal Role="Usuario">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Comentario">
-              <PropertyRef Name="Requerimiento" />
+            <Dependent Role="Bitacora">
+              <PropertyRef Name="Solicitante" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -197,6 +221,18 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Requerimiento_ToSistema">
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="0..1" />
+          <End Role="Requerimiento" Type="Self.Requerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Requerimiento">
+              <PropertyRef Name="Sistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Requerimiento_ToUsuario">
           <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
           <End Role="Requerimiento" Type="Self.Requerimiento" Multiplicity="*" />
@@ -210,9 +246,11 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="masterModelStoreContainer">
+          <EntitySet Name="Bitacora" EntityType="Self.Bitacora" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comentario" EntityType="Self.Comentario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estado" EntityType="Self.Estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Requerimiento" EntityType="Self.Requerimiento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sistema" EntityType="Self.Sistema" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MSreplication_options" EntityType="Self.MSreplication_options" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -278,9 +316,9 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
     [spt_monitor].[total_errors] AS [total_errors]
     FROM [dbo].[spt_monitor] AS [spt_monitor]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_Comentario_ToRequerimiento" Association="Self.FK_Comentario_ToRequerimiento">
-            <End Role="Requerimiento" EntitySet="Requerimiento" />
-            <End Role="Comentario" EntitySet="Comentario" />
+          <AssociationSet Name="FK_Bitacora_ToUsuario" Association="Self.FK_Bitacora_ToUsuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Bitacora" EntitySet="Bitacora" />
           </AssociationSet>
           <AssociationSet Name="FK_Comentario_ToUsuario" Association="Self.FK_Comentario_ToUsuario">
             <End Role="Usuario" EntitySet="Usuario" />
@@ -288,6 +326,10 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
           </AssociationSet>
           <AssociationSet Name="FK_Requerimiento_ToEstado" Association="Self.FK_Requerimiento_ToEstado">
             <End Role="Estado" EntitySet="Estado" />
+            <End Role="Requerimiento" EntitySet="Requerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requerimiento_ToSistema" Association="Self.FK_Requerimiento_ToSistema">
+            <End Role="Sistema" EntitySet="Sistema" />
             <End Role="Requerimiento" EntitySet="Requerimiento" />
           </AssociationSet>
           <AssociationSet Name="FK_Requerimiento_ToUsuario" Association="Self.FK_Requerimiento_ToUsuario">
@@ -299,44 +341,6 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="masterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Estado">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Requerimiento" Relationship="Self.FK_Requerimiento_ToEstado" FromRole="Estado" ToRole="Requerimiento" />
-          <Property Name="Priorizable" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Requerimiento">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Solicitante" Type="Int32" Nullable="false" />
-          <Property Name="Dificultad" Type="String" MaxLength="30" FixedLength="true" Unicode="true" />
-          <Property Name="Plantilla" Type="String" MaxLength="30" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="70" FixedLength="true" Unicode="true" />
-          <Property Name="FechaEnviado" Type="DateTime" Precision="3" />
-          <Property Name="FechaRecibido" Type="DateTime" Precision="3" />
-          <Property Name="Estado" Type="Int32" />
-          <NavigationProperty Name="Estado1" Relationship="Self.FK_Requerimiento_ToEstado" FromRole="Requerimiento" ToRole="Estado" />
-          <NavigationProperty Name="Usuario" Relationship="Self.FK_Requerimiento_ToUsuario" FromRole="Requerimiento" ToRole="Usuario" />
-          <NavigationProperty Name="Comentario" Relationship="masterModel.FK_Comentario_ToRequerimiento" FromRole="Requerimiento" ToRole="Comentario" />
-        </EntityType>
-        <EntityType Name="Usuario">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Departamento" Type="String" MaxLength="40" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Administrador" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Requerimiento" Relationship="Self.FK_Requerimiento_ToUsuario" FromRole="Usuario" ToRole="Requerimiento" />
-          <NavigationProperty Name="Comentario" Relationship="masterModel.FK_Comentario_ToUsuario" FromRole="Usuario" ToRole="Comentario" />
-        </EntityType>
         <EntityType Name="MSreplication_options">
           <Key>
             <PropertyRef Name="optname" />
@@ -441,57 +445,50 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
           <Property Name="total_write" Type="Int32" Nullable="false" />
           <Property Name="total_errors" Type="Int32" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Requerimiento_ToEstado">
-          <End Role="Estado" Type="Self.Estado" Multiplicity="0..1" />
-          <End Role="Requerimiento" Type="Self.Requerimiento" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Estado">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Requerimiento">
-              <PropertyRef Name="Estado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Requerimiento_ToUsuario">
-          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
-          <End Role="Requerimiento" Type="Self.Requerimiento" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuario">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Requerimiento">
-              <PropertyRef Name="Solicitante" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="masterEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Estado" EntityType="Self.Estado" />
-          <EntitySet Name="Requerimiento" EntityType="Self.Requerimiento" />
-          <EntitySet Name="Usuario" EntityType="Self.Usuario" />
           <EntitySet Name="MSreplication_options" EntityType="Self.MSreplication_options" />
           <EntitySet Name="spt_fallback_db" EntityType="Self.spt_fallback_db" />
           <EntitySet Name="spt_fallback_dev" EntityType="Self.spt_fallback_dev" />
           <EntitySet Name="spt_fallback_usg" EntityType="Self.spt_fallback_usg" />
           <EntitySet Name="spt_monitor" EntityType="Self.spt_monitor" />
-          <AssociationSet Name="FK_Requerimiento_ToEstado" Association="Self.FK_Requerimiento_ToEstado">
-            <End Role="Estado" EntitySet="Estado" />
-            <End Role="Requerimiento" EntitySet="Requerimiento" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Requerimiento_ToUsuario" Association="Self.FK_Requerimiento_ToUsuario">
-            <End Role="Usuario" EntitySet="Usuario" />
-            <End Role="Requerimiento" EntitySet="Requerimiento" />
-          </AssociationSet>
+          <EntitySet Name="Bitacora" EntityType="masterModel.Bitacora" />
           <EntitySet Name="Comentario" EntityType="masterModel.Comentario" />
-          <AssociationSet Name="FK_Comentario_ToRequerimiento" Association="masterModel.FK_Comentario_ToRequerimiento">
-            <End Role="Requerimiento" EntitySet="Requerimiento" />
-            <End Role="Comentario" EntitySet="Comentario" />
+          <EntitySet Name="Estado" EntityType="masterModel.Estado" />
+          <EntitySet Name="Requerimiento" EntityType="masterModel.Requerimiento" />
+          <EntitySet Name="Sistema" EntityType="masterModel.Sistema" />
+          <EntitySet Name="Usuario" EntityType="masterModel.Usuario" />
+          <AssociationSet Name="FK_Bitacora_ToUsuario" Association="masterModel.FK_Bitacora_ToUsuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Bitacora" EntitySet="Bitacora" />
           </AssociationSet>
           <AssociationSet Name="FK_Comentario_ToUsuario" Association="masterModel.FK_Comentario_ToUsuario">
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Comentario" EntitySet="Comentario" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="FK_Requerimiento_ToEstado" Association="masterModel.FK_Requerimiento_ToEstado">
+            <End Role="Estado" EntitySet="Estado" />
+            <End Role="Requerimiento" EntitySet="Requerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requerimiento_ToSistema" Association="masterModel.FK_Requerimiento_ToSistema">
+            <End Role="Sistema" EntitySet="Sistema" />
+            <End Role="Requerimiento" EntitySet="Requerimiento" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requerimiento_ToUsuario" Association="masterModel.FK_Requerimiento_ToUsuario">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Requerimiento" EntitySet="Requerimiento" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Bitacora">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Cambio" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Solicitante" Type="Int32" Nullable="false" />
+          <Property Name="Requerimiento" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Usuario" Relationship="masterModel.FK_Bitacora_ToUsuario" FromRole="Bitacora" ToRole="Usuario" />
+        </EntityType>
         <EntityType Name="Comentario">
           <Key>
             <PropertyRef Name="Id" />
@@ -501,18 +498,71 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
           <Property Name="Fecha" Type="DateTime" Precision="3" />
           <Property Name="Solicitante" Type="Int32" Nullable="false" />
           <Property Name="Requerimiento" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Requerimiento1" Relationship="masterModel.FK_Comentario_ToRequerimiento" FromRole="Comentario" ToRole="Requerimiento" />
           <NavigationProperty Name="Usuario" Relationship="masterModel.FK_Comentario_ToUsuario" FromRole="Comentario" ToRole="Usuario" />
         </EntityType>
-        <Association Name="FK_Comentario_ToRequerimiento">
-          <End Type="masterModel.Requerimiento" Role="Requerimiento" Multiplicity="1" />
-          <End Type="masterModel.Comentario" Role="Comentario" Multiplicity="*" />
+        <EntityType Name="Estado">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Priorizable" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Requerimiento" Relationship="masterModel.FK_Requerimiento_ToEstado" FromRole="Estado" ToRole="Requerimiento" />
+        </EntityType>
+        <EntityType Name="Requerimiento">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Solicitante" Type="Int32" Nullable="false" />
+          <Property Name="Dificultad" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Importancia" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Urgencia" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Jerarquia" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Prioridad" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Modulo" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Plantilla" Type="String" Nullable="false" MaxLength="30" FixedLength="true" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="70" FixedLength="true" Unicode="true" />
+          <Property Name="FechaEnviado" Type="DateTime" Precision="3" />
+          <Property Name="FechaRecibido" Type="DateTime" Precision="3" />
+          <Property Name="Estado" Type="Int32" />
+          <Property Name="Sistema" Type="Int32" />
+          <NavigationProperty Name="Estado1" Relationship="masterModel.FK_Requerimiento_ToEstado" FromRole="Requerimiento" ToRole="Estado" />
+          <NavigationProperty Name="Sistema1" Relationship="masterModel.FK_Requerimiento_ToSistema" FromRole="Requerimiento" ToRole="Sistema" />
+          <NavigationProperty Name="Usuario" Relationship="masterModel.FK_Requerimiento_ToUsuario" FromRole="Requerimiento" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Sistema">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Requerimiento" Relationship="masterModel.FK_Requerimiento_ToSistema" FromRole="Sistema" ToRole="Requerimiento" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Departamento" Type="String" Nullable="false" MaxLength="40" FixedLength="true" Unicode="true" />
+          <Property Name="Administrador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Bitacora" Relationship="masterModel.FK_Bitacora_ToUsuario" FromRole="Usuario" ToRole="Bitacora" />
+          <NavigationProperty Name="Comentario" Relationship="masterModel.FK_Comentario_ToUsuario" FromRole="Usuario" ToRole="Comentario" />
+          <NavigationProperty Name="Requerimiento" Relationship="masterModel.FK_Requerimiento_ToUsuario" FromRole="Usuario" ToRole="Requerimiento" />
+        </EntityType>
+        <Association Name="FK_Bitacora_ToUsuario">
+          <End Type="masterModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="masterModel.Bitacora" Role="Bitacora" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Requerimiento">
+            <Principal Role="Usuario">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Comentario">
-              <PropertyRef Name="Requerimiento" />
+            <Dependent Role="Bitacora">
+              <PropertyRef Name="Solicitante" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -528,47 +578,48 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_Requerimiento_ToEstado">
+          <End Type="masterModel.Estado" Role="Estado" Multiplicity="0..1" />
+          <End Type="masterModel.Requerimiento" Role="Requerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estado">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Requerimiento">
+              <PropertyRef Name="Estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requerimiento_ToSistema">
+          <End Type="masterModel.Sistema" Role="Sistema" Multiplicity="0..1" />
+          <End Type="masterModel.Requerimiento" Role="Requerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Requerimiento">
+              <PropertyRef Name="Sistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requerimiento_ToUsuario">
+          <End Type="masterModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="masterModel.Requerimiento" Role="Requerimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Requerimiento">
+              <PropertyRef Name="Solicitante" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="masterModelStoreContainer" CdmEntityContainer="masterEntities">
-          <EntitySetMapping Name="Estado">
-            <EntityTypeMapping TypeName="masterModel.Estado">
-              <MappingFragment StoreEntitySet="Estado">
-                <ScalarProperty Name="Priorizable" ColumnName="Priorizable" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Requerimiento">
-            <EntityTypeMapping TypeName="masterModel.Requerimiento">
-              <MappingFragment StoreEntitySet="Requerimiento">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="Solicitante" ColumnName="Solicitante" />
-                <ScalarProperty Name="Dificultad" ColumnName="Dificultad" />
-                <ScalarProperty Name="Plantilla" ColumnName="Plantilla" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="FechaEnviado" ColumnName="FechaEnviado" />
-                <ScalarProperty Name="FechaRecibido" ColumnName="FechaRecibido" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Usuario">
-            <EntityTypeMapping TypeName="masterModel.Usuario">
-              <MappingFragment StoreEntitySet="Usuario">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Departamento" ColumnName="Departamento" />
-                <ScalarProperty Name="Administrador" ColumnName="Administrador" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="MSreplication_options">
             <EntityTypeMapping TypeName="masterModel.MSreplication_options">
               <MappingFragment StoreEntitySet="MSreplication_options">
@@ -643,12 +694,73 @@ warning 6002: The table/view 'master.dbo.spt_monitor' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Bitacora">
+            <EntityTypeMapping TypeName="masterModel.Bitacora">
+              <MappingFragment StoreEntitySet="Bitacora">
+                <ScalarProperty Name="Requerimiento" ColumnName="Requerimiento" />
+                <ScalarProperty Name="Solicitante" ColumnName="Solicitante" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Cambio" ColumnName="Cambio" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Comentario">
             <EntityTypeMapping TypeName="masterModel.Comentario">
               <MappingFragment StoreEntitySet="Comentario">
                 <ScalarProperty Name="Requerimiento" ColumnName="Requerimiento" />
                 <ScalarProperty Name="Solicitante" ColumnName="Solicitante" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estado">
+            <EntityTypeMapping TypeName="masterModel.Estado">
+              <MappingFragment StoreEntitySet="Estado">
+                <ScalarProperty Name="Priorizable" ColumnName="Priorizable" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requerimiento">
+            <EntityTypeMapping TypeName="masterModel.Requerimiento">
+              <MappingFragment StoreEntitySet="Requerimiento">
+                <ScalarProperty Name="Sistema" ColumnName="Sistema" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="FechaRecibido" ColumnName="FechaRecibido" />
+                <ScalarProperty Name="FechaEnviado" ColumnName="FechaEnviado" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Plantilla" ColumnName="Plantilla" />
+                <ScalarProperty Name="Modulo" ColumnName="Modulo" />
+                <ScalarProperty Name="Prioridad" ColumnName="Prioridad" />
+                <ScalarProperty Name="Jerarquia" ColumnName="Jerarquia" />
+                <ScalarProperty Name="Urgencia" ColumnName="Urgencia" />
+                <ScalarProperty Name="Importancia" ColumnName="Importancia" />
+                <ScalarProperty Name="Dificultad" ColumnName="Dificultad" />
+                <ScalarProperty Name="Solicitante" ColumnName="Solicitante" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sistema">
+            <EntityTypeMapping TypeName="masterModel.Sistema">
+              <MappingFragment StoreEntitySet="Sistema">
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuario">
+            <EntityTypeMapping TypeName="masterModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuario">
+                <ScalarProperty Name="Administrador" ColumnName="Administrador" />
+                <ScalarProperty Name="Departamento" ColumnName="Departamento" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

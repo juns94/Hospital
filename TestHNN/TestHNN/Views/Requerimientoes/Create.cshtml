@@ -4,17 +4,14 @@
     ViewBag.Title = "Create";
 }
 
-<br />
-<br />
-<br />
-
+<h2>Create</h2>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Crear un nuevo Requerimiento</h4>
+        <h4>Requerimiento</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -28,8 +25,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-
-                @Html.TextBoxFor(model => model.Fecha, new { @Value = DateTime.Now, id = "date" })
+                @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -45,8 +41,69 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Dificultad, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Dificultad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownList("Dificultad", new List<SelectListItem> {
+                       new SelectListItem { Value = "Alta" , Text = "Alta" },
+                       new SelectListItem { Value = "Media" , Text = "Media" },
+                       new SelectListItem { Value = "Baja" , Text = "Baja" }
+                    }, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Dificultad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Importancia, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Importancia", new List<SelectListItem> {
+                       new SelectListItem { Value = "Alta" , Text = "Alta" },
+                       new SelectListItem { Value = "Media" , Text = "Media" },
+                       new SelectListItem { Value = "Baja" , Text = "Baja" }
+                    }, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Importancia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Urgencia, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Urgencia", new List<SelectListItem> {
+                       new SelectListItem { Value = "Alta" , Text = "Alta" },
+                       new SelectListItem { Value = "Media" , Text = "Media" },
+                       new SelectListItem { Value = "Baja" , Text = "Baja" }
+                    }, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Urgencia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Jerarquia, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Jerarquia", new List<SelectListItem> {
+                       new SelectListItem { Value = "Alta" , Text = "Alta" },
+                       new SelectListItem { Value = "Media" , Text = "Media" },
+                       new SelectListItem { Value = "Baja" , Text = "Baja" }
+                    }, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Jerarquia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Prioridad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Prioridad   ", new List<SelectListItem> {
+                       new SelectListItem { Value = "Alta" , Text = "Alta" },
+                       new SelectListItem { Value = "Media" , Text = "Media" },
+                       new SelectListItem { Value = "Baja" , Text = "Baja" }
+                    }, htmlAttributes: new { @class = "form-control" })
+             
+                @Html.ValidationMessageFor(model => model.Prioridad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Modulo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Modulo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Modulo, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -69,7 +126,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FechaEnviado, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.FechaEnviado, new { @Value = DateTime.Now, id = "date" })
+                @Html.EditorFor(model => model.FechaEnviado, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FechaEnviado, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -77,7 +134,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.FechaRecibido, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.FechaRecibido, new { @Value = DateTime.Now, id = "date" })
+                @Html.EditorFor(model => model.FechaRecibido, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FechaRecibido, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -91,11 +148,20 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Sistema, "Sistema", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Sistema", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Sistema, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
+
     <script>
 
         $(document).ready(function () {
@@ -108,9 +174,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Regresar", "Index")
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

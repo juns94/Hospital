@@ -14,26 +14,25 @@ namespace TestHNN.Models
     
     public partial class Requerimiento
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Requerimiento()
-        {
-            this.Comentario = new HashSet<Comentario>();
-        }
-    
         public int Id { get; set; }
         public string Nombre { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public int Solicitante { get; set; }
         public string Dificultad { get; set; }
+        public string Importancia { get; set; }
+        public string Urgencia { get; set; }
+        public string Jerarquia { get; set; }
+        public string Prioridad { get; set; }
+        public string Modulo { get; set; }
         public string Plantilla { get; set; }
         public string Descripcion { get; set; }
         public Nullable<System.DateTime> FechaEnviado { get; set; }
         public Nullable<System.DateTime> FechaRecibido { get; set; }
         public Nullable<int> Estado { get; set; }
+        public Nullable<int> Sistema { get; set; }
     
         public virtual Estado Estado1 { get; set; }
+        public virtual Sistema Sistema1 { get; set; }
         public virtual Usuario Usuario { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Comentario> Comentario { get; set; }
     }
 }

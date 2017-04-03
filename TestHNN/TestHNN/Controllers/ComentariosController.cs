@@ -17,14 +17,14 @@ namespace TestHNN.Controllers
         // GET: Comentarios
         public ActionResult Index()
         {
-            var comentario = db.Comentario.Include(c => c.Requerimiento1).Include(c => c.Usuario);
+            var comentario = db.Comentario;
             return View(comentario.ToList());
         }
-
         // GET: Comentarios
         public ActionResult ShowById(int? id)
         {
-            var comentario = db.Comentario.Include(c => c.Requerimiento1).Include(c => c.Usuario).Where(c => c.Requerimiento1.Id == id);
+            var comentario = db.Comentario.Where(c => c.Requerimiento == id);
+            ViewBag.id = id;
             return View(comentario.ToList());
         }
 
@@ -46,7 +46,6 @@ namespace TestHNN.Controllers
         // GET: Comentarios/Create
         public ActionResult Create()
         {
-            ViewBag.Requerimiento = new SelectList(db.Requerimiento, "Id", "Nombre");
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre");
             return View();
         }
@@ -60,16 +59,40 @@ namespace TestHNN.Controllers
         {
             if (ModelState.IsValid)
             {
-                comentario.Fecha = DateTime.Now;
                 db.Comentario.Add(comentario);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Requerimiento = new SelectList(db.Requerimiento, "Id", "Nombre", comentario.Requerimiento);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", comentario.Solicitante);
             return View(comentario);
         }
+
+        public ActionResult CreateForId()
+        {
+            ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre");
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateForId(int? id,[Bind(Include = "Id,Nombre,Fecha,Solicitante,Requerimiento")] Comentario comentario)
+        {
+           
+                comentario.Requerimiento = (int)id;
+                db.Comentario.Add(comentario);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            
+
+            ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", comentario.Solicitante);
+            return View(comentario);
+        }
+
+
+
+
 
         // GET: Comentarios/Edit/5
         public ActionResult Edit(int? id)
@@ -83,7 +106,6 @@ namespace TestHNN.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Requerimiento = new SelectList(db.Requerimiento, "Id", "Nombre", comentario.Requerimiento);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", comentario.Solicitante);
             return View(comentario);
         }
@@ -101,7 +123,6 @@ namespace TestHNN.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Requerimiento = new SelectList(db.Requerimiento, "Id", "Nombre", comentario.Requerimiento);
             ViewBag.Solicitante = new SelectList(db.Usuario, "Id", "Nombre", comentario.Solicitante);
             return View(comentario);
         }

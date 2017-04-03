@@ -12,10 +12,10 @@ namespace TestHNN.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Comentario
+    public partial class Bitacora
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
+        public string Cambio { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public int Solicitante { get; set; }
         public int Requerimiento { get; set; }

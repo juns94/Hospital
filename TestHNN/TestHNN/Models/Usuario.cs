@@ -17,8 +17,9 @@ namespace TestHNN.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Usuario()
         {
-            this.Requerimiento = new HashSet<Requerimiento>();
+            this.Bitacora = new HashSet<Bitacora>();
             this.Comentario = new HashSet<Comentario>();
+            this.Requerimiento = new HashSet<Requerimiento>();
         }
     
         public int Id { get; set; }
@@ -27,8 +28,10 @@ namespace TestHNN.Models
         public int Administrador { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Requerimiento> Requerimiento { get; set; }
+        public virtual ICollection<Bitacora> Bitacora { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comentario> Comentario { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Requerimiento> Requerimiento { get; set; }
     }
 }
